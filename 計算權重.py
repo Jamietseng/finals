@@ -79,7 +79,7 @@ class Subject:  # 定義subject這個type，包含上課效益、學分數、考
 
 class_subject_list = subject_list.copy()
 
-# 將每堂課的資料丟到class裡面
+# 將每堂課的資料丟到class_subject_list裡面
 for i in range(len(class_subject_list)):
     class_subject_list[i] = Subject(self=class_subject_list[i],
                                     on_class_utility=on_class_utility_list[i],
