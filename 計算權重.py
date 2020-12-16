@@ -81,8 +81,7 @@ class_subject_list = subject_list.copy()
 
 # 將每堂課的資料丟到class裡面
 for i in range(len(class_subject_list)):
-    class_subject_list[i] = Subject(self=class_subject_list[i],
-                                    on_class_utility=on_class_utility_list[i],
+    class_subject_list[i] = Subject(on_class_utility=on_class_utility_list[i],
                                     credit=credit_list[i],
                                     exam_percentage=exam_percentage_list[i],
                                     efficiency=efficiency_list[i],
@@ -99,10 +98,19 @@ for i in range(len(subject_list)):
     self_studying_utility_dict[subject_list[i]] = efficiency_to_utility(efficiency_list[i])
 
 
+final_utility_list = []
+for i in range(len(efficiency_list)):
+    for j in efficiency_to_utility(efficiency_list[i]):
+        j *= credit_list[i] * exam_percentage_list[i]
+        print(j)
+    final_utility_list.append(efficiency_to_utility(efficiency_list[i]))
+
+
+'''
 for i in range(total_time):
     for k in range(len(class_subject_list)):
         if class_subject_list[k].
-
+'''
 
 
 
