@@ -57,9 +57,20 @@ for k in range(len(efficiency_list)):
         accumulated_minus = 0.02
         utility_E_list = efficiency_calculate(initial_utility, accumulated_minus)
 
-if debug:
-    print(utility_B_list)
-    
+class Subject:
+    def __init__(self, on_class_utility, credit, efficiency, exam_percentage):
+        self.on_class_utility = on_class_utility
+        self.credit = credit
+        self.efficiency = efficiency
+        self.exam_percentage = exam_percentage
+
+for i in range(len(credit_list)):
+    sample = Subject(on_class_utility_list[i], credit_list[i], efficiency_list[i], exam_percentage_list[i])
+    print(sample.on_class_utility)
+    print(sample.credit)
+    print(sample.efficiency)
+    print(sample.exam_percentage)
+
 
 
 
