@@ -109,18 +109,17 @@ for i in range(len(efficiency_list)):
     each_final_utility_list = []
 
 
-temp_list = []
+temp_list = []  #temporary list
 
-for i in range(total_time):
+for i in range(total_time):  # 計算各科總共要上多少時間
     for j in range(len(final_utility_list)):
-        temp_list.append(final_utility_list[j][0])
+        temp_list.append(final_utility_list[j][0])  # 抓每科邊際效益最高者
     if debug:
         print(temp_list)
         print()
 
     for k in range(len(final_utility_list)):
-        
-        if  final_utility_list[k][0] == max(temp_list):
+        if  final_utility_list[k][0] == max(temp_list):  # 紀錄邊際效益最高者
             if subject_list[k] in self_studying_time_dict:
                 self_studying_time_dict[subject_list[k]] += 1
             else:
