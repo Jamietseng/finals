@@ -100,19 +100,37 @@ for i in range(len(subject_list)):
 
 each_final_utility_list = []  # 記錄每科的最後效益
 final_utility_list = []  # 紀錄全部的最後效益
+
 for i in range(len(efficiency_list)):
     for j in efficiency_to_utility(efficiency_list[i]):
         j *= credit_list[i] * exam_percentage_list[i]
         each_final_utility_list.append('{:+.5f}'.format(j))  # 記到小數點後五位
-    final_utility_list.append(each_final_utility_list)
+    final_utility_list.append([float(i) for i in each_final_utility_list])
     each_final_utility_list = []
 
 
-for i in range(total_time):
-    for k in range(len(class_subject_list)):
-        if class_subject_list[k].
-        
+temp_list = []
 
+for i in range(total_time):
+    for j in range(len(final_utility_list)):
+        temp_list.append(final_utility_list[j][0])
+    if debug:
+        print(temp_list)
+        print()
+
+    for k in range(len(final_utility_list)):
+        
+        if  final_utility_list[k][0] == max(temp_list):
+            if subject_list[k] in self_studying_time_dict:
+                self_studying_time_dict[subject_list[k]] += 1
+            else:
+                self_studying_time_dict[subject_list[k]] = 1
+
+            final_utility_list[k].pop(0)
+            temp_list.clear()
+            break
+if debug:
+    print(self_studying_time_dict)
 
 
 
