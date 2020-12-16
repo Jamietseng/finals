@@ -49,23 +49,24 @@ def efficiency_calculate(initial_utility, accumulated_minus):
     return(utility_list)
 
 
+# 計算讀書效率及效益的函數
 def efficiency_to_utility(efficiency):
     if efficiency == 'A':  # 最低
-        self_stydying_utility_list = efficiency_calculate(4, 0.04)
+        self_studying_utility_list = efficiency_calculate(4, 0.04)
 
     elif efficiency == 'B':  # 低
-        self_stydying_utility_list = efficiency_calculate(4.5, 0.04)
+        self_studying_utility_list = efficiency_calculate(4.5, 0.04)
 
     elif efficiency == 'C':  # 普通
-        self_stydying_utility_list = efficiency_calculate(5, 0.03)
+        self_studying_utility_list = efficiency_calculate(5, 0.03)
 
     elif efficiency == 'D':  # 高
-        self_stydying_utility_list = efficiency_calculate(5.5, 0.02)
+        self_studying_utility_list = efficiency_calculate(5.5, 0.02)
 
     elif efficiency == 'E':  # 最高
-        self_stydying_utility_list = efficiency_calculate(6, 0.02)
+        self_studying_utility_list = efficiency_calculate(6, 0.02)
 
-    return(self_stydying_utility_list)
+    return(self_studying_utility_list)
 
 
 class Subject:  # 定義subject這個type，包含上課效益、學分數、考試占比、效率、權重
@@ -78,6 +79,7 @@ class Subject:  # 定義subject這個type，包含上課效益、學分數、考
 
 class_subject_list = subject_list.copy()
 
+# 將每堂課的資料丟到class裡面
 for i in range(len(class_subject_list)):
     class_subject_list[i] = Subject(self=class_subject_list[i],
                                     on_class_utility=on_class_utility_list[i],
@@ -87,14 +89,14 @@ for i in range(len(class_subject_list)):
                                     weighting=weighting_list[i],)
 
 
-self_stydying_utility_dict = dict()
+self_studying_utility_dict = dict()
 # key = subject, value = self_stydying_utility_list (each hour)
 
-self_stydying_time_dict = dict()
+self_studying_time_dict = dict()
 # key = subject, value = how much time to study that subject
 
 for i in range(len(subject_list)):
-    self_stydying_utility_dict[subject_list[i]] = efficiency_to_utility(efficiency_list[i])
+    self_studying_utility_dict[subject_list[i]] = efficiency_to_utility(efficiency_list[i])
 
 
 for i in range(total_time):
