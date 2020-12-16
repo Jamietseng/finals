@@ -27,6 +27,9 @@ total_time = int(input())
 # 上課堂數
 class_number = [int(s) for s in input().split(',')]
 
+# 絕對不翹的課
+never_skip_class = [int(s) for s in input().split(',')]
+
 # 計算權重
 max_credit = max(credit_list)
 for i in range(len(credit_list)):
@@ -147,9 +150,20 @@ if debug:
 
 for i in range(len(on_class_utility_list)):
     on_class_utility_list[i] *= weighting_list[i] 
+# 上課效益＊權重
 
-if debug:
-    print(on_class_utility_list)
+potential_class_list = []  # 可能會去上的各科堂數
+for i in range(len(class_number)):
+    potential_class_list.append(class_number[i] - never_skip_class[i]) 
+
+
+going_class_list = [[] for i in range(len(subject_list))]  # 去上的課堂數
+for i in range(len(potential_class_list)):
+    if potential_class_list[i] == 0:
+        continue
+
+
+
 
 
 
