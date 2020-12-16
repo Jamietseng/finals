@@ -98,20 +98,20 @@ for i in range(len(subject_list)):
     self_studying_utility_dict[subject_list[i]] = efficiency_to_utility(efficiency_list[i])
 
 
-final_utility_list = []
+each_final_utility_list = []  # 記錄每科的最後效益
+final_utility_list = []  # 紀錄全部的最後效益
 for i in range(len(efficiency_list)):
     for j in efficiency_to_utility(efficiency_list[i]):
         j *= credit_list[i] * exam_percentage_list[i]
-        print(j)
-    final_utility_list.append(efficiency_to_utility(efficiency_list[i]))
+        each_final_utility_list.append('{:+.5f}'.format(j))  # 記到小數點後五位
+    final_utility_list.append(each_final_utility_list)
+    each_final_utility_list = []
 
 
-'''
 for i in range(total_time):
     for k in range(len(class_subject_list)):
         if class_subject_list[k].
-'''
-
+        
 
 
 
