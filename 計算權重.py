@@ -7,7 +7,7 @@ weighting_list = []
 subject_list = input().split(',')
 
 # 上課效益(1~5)
-on_class_utility_list = input().split(',')
+on_class_utility_list = [int(s) for s in input().split(',')]
 
 # 各科學分數
 credit_list = [int(i) for i in input().split(',')]
@@ -24,6 +24,8 @@ class_subject_list = []
 # 上課＋讀書＝一週總時間（不包含絕不能翹的課）
 total_time = int(input())
 
+# 上課堂數
+class_number = [int(s) for s in input().split(',')]
 
 # 計算權重
 max_credit = max(credit_list)
@@ -31,6 +33,9 @@ for i in range(len(credit_list)):
     credit_list[i] = credit_list[i] / max_credit
     weighting_list.append(credit_list[i] * exam_percentage_list[i])
 
+
+
+'''stage 2'''
 
 # 計算讀書效率函數
 def efficiency_calculate(initial_utility, accumulated_minus):
@@ -69,6 +74,9 @@ def efficiency_to_utility(efficiency):
     return(self_studying_utility_list)
 
 
+
+'''stage 3'''
+
 class Subject:  # 定義subject這個type，包含上課效益、學分數、考試占比、效率、權重
     def __init__(self, on_class_utility, credit, exam_percentage, efficiency, weighting):
         self.on_class_utility = on_class_utility
@@ -103,20 +111,20 @@ final_utility_list = []  # 紀錄全部的最後效益
 
 for i in range(len(efficiency_list)):
     for j in efficiency_to_utility(efficiency_list[i]):
-        j *= credit_list[i] * exam_percentage_list[i]
+        j *= weighting_list[i]
         each_final_utility_list.append('{:+.5f}'.format(j))  # 記到小數點後五位
     final_utility_list.append([float(i) for i in each_final_utility_list])
     each_final_utility_list = []
 
 
-temp_list = []  #temporary list
+temp_list = []  # temporary list
+# weighting * on_class_utility
+selected_hour_utility_list = [[] for i in range(len(subject_list))]
 
 for i in range(total_time):  # 計算各科總共要上多少時間
     for j in range(len(final_utility_list)):
         temp_list.append(final_utility_list[j][0])  # 抓每科邊際效益最高者
-    if debug:
-        print(temp_list)
-        print()
+    
 
     for k in range(len(final_utility_list)):
         if  final_utility_list[k][0] == max(temp_list):  # 紀錄邊際效益最高者
@@ -125,16 +133,23 @@ for i in range(total_time):  # 計算各科總共要上多少時間
             else:
                 self_studying_time_dict[subject_list[k]] = 1
 
+            selected_hour_utility_list[k].append(final_utility_list[k][0])
             final_utility_list[k].pop(0)
             temp_list.clear()
             break
 if debug:
     print(self_studying_time_dict)
+    print(selected_hour_utility_list)
 
 
 
+'''stage 4'''
 
+for i in range(len(on_class_utility_list)):
+    on_class_utility_list[i] *= weighting_list[i] 
 
+if debug:
+    print(on_class_utility_list)
 
 
 
