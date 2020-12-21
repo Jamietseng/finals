@@ -140,10 +140,6 @@ for i in range(total_time):  # 計算各科總共要上多少時間
             final_utility_list[k].pop(0)
             temp_list.clear()
             break
-if debug:
-    print(self_studying_time_dict)
-    print(selected_hour_utility_list)
-
 
 
 '''stage 4'''
@@ -156,23 +152,48 @@ potential_class_list = []  # 可能會去上的各科堂數
 for i in range(len(class_number)):
     potential_class_list.append(class_number[i] - never_skip_class[i]) 
 
+on_class_utility_order_list = []  # 上課效益的大小順序
+for i in range(len(on_class_utility_list)):
+    order = on_class_utility_list.index(sorted(on_class_utility_list, reverse = True)[i])
+    on_class_utility_order_list.append(order)
+    order = 0
 
-going_class_list = [[] for i in range(len(subject_list))]  # 去上的課堂數
-for i in range(len(potential_class_list)):
-    if potential_class_list[i] == 0:
+
+selected_hour_utility_list_cp = selected_hour_utility_list.copy()  # 複製一下不要動到原本的
+temp_min_list = []  # 存邊際效益最小的暫時list
+going_class_dict = dict()  # 存哪幾門課要上幾堂課的dict
+minimum = 1000
+minimum_place = 0
+for i in on_class_utility_order_list:  # 開始計算
+    if potential_class_list[i] == 0:  # 如果那一門課全部都要上就跳過
         continue
+    
+    for j in range(potential_class_list[i]):  # 那一門課的扣打
+        for k in range(len(selected_hour_utility_list_cp)):  # 抓讀每門課最小的邊際效益
+            temp_min_list.append(selected_hour_utility_list_cp[k][-1])
+        
+        for k in range(len(temp_min_list)):  # 找裡面的最小值跟他是哪一門課
+            if temp_min_list[k] < minimum:
+                minimum = temp_min_list[k]
+                minimum_place = k
+        
+        if on_class_utility_list[i] >= minimum:  # 如果上課效益比較大就去上課
+            if subject_list[i] not in going_class_dict:
+                going_class_dict[subject_list[i]] = 1
+            else:
+                going_class_dict[subject_list[i]] += 1
+            
+            selected_hour_utility_list_cp[minimum_place].pop(-1)
+            temp_min_list = []
+            minimum = 1000
+            minimum_place = 0
 
-
-
-
-
-
-
-
-
-
-
-
+going_class_list = []  # 存每門課要再去上多少堂
+for i in range(len(subject_list)):  # 把剛剛的dict丟進來
+    if subject_list[i] not in going_class_dict:
+        going_class_list.append(0)
+    else:
+        going_class_list.append(going_class_dict[subject_list[i]])
 
 
 
