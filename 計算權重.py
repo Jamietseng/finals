@@ -21,7 +21,7 @@ efficiency_list = input().split(',')
 # type 為 Subject
 class_subject_list = []
 
-# 上課＋讀書＝一週總時間（不包含絕不能翹的課）
+# 上課＋讀書＝一週總時間（包含絕不能翹的課）
 total_time = int(input())
 
 # 上課堂數
@@ -36,7 +36,9 @@ for i in range(len(credit_list)):
     credit_list[i] = credit_list[i] / max_credit
     weighting_list.append(credit_list[i] * exam_percentage_list[i])
 
-
+# 上課+讀書=一周總時間（不包含絕不能翹的課）
+for i in never_skip_class:
+    total_time -= i
 
 '''stage 2'''
 
@@ -141,7 +143,7 @@ for i in range(total_time):  # 計算各科總共要上多少時間
             temp_list.clear()
             break
 
-
+print(self_studying_time_dict)
 '''stage 4'''
 
 for i in range(len(on_class_utility_list)):
@@ -170,7 +172,10 @@ for i in on_class_utility_order_list:  # 開始計算
     
     for j in range(potential_class_list[i]):  # 那一門課的扣打
         for k in range(len(selected_hour_utility_list_cp)):  # 抓讀每門課最小的邊際效益
-            temp_min_list.append(selected_hour_utility_list_cp[k][-1])
+            if selected_hour_utility_list_cp[k] != []:
+                temp_min_list.append(selected_hour_utility_list_cp[k][-1])
+            else:
+                temp_min_list.append(10000)
         
         for k in range(len(temp_min_list)):  # 找裡面的最小值跟他是哪一門課
             if temp_min_list[k] < minimum:
@@ -183,7 +188,7 @@ for i in on_class_utility_order_list:  # 開始計算
             else:
                 going_class_dict[subject_list[i]] += 1
             
-            selected_hour_utility_list_cp[minimum_place].pop(-1)
+            selected_hour_utility_list_cp[minimum_place].remove(minimum)
             temp_min_list = []
             minimum = 1000
             minimum_place = 0
@@ -195,11 +200,9 @@ for i in range(len(subject_list)):  # 把剛剛的dict丟進來
     else:
         going_class_list.append(going_class_dict[subject_list[i]])
 
-for i in range(len(subject_list)):
-    if subject_list[i] in going_class_dict:
-        less = going_class_dict[subject_list[i]]
-        self_studying_time_dict[subject_list[i]] -= less
-    less = 0
+for i in range(len(subject_list)):  # 讀書時間減掉後來再去上課的堂數
+    if self_studying_time_dict[subject_list[i]] != len(selected_hour_utility_list_cp[i]):
+        self_studying_time_dict[subject_list[i]] = len(selected_hour_utility_list_cp[i])
 
 print(self_studying_time_dict)
 
