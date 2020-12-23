@@ -195,8 +195,13 @@ for i in range(len(subject_list)):  # 把剛剛的dict丟進來
     else:
         going_class_list.append(going_class_dict[subject_list[i]])
 
+for i in range(len(subject_list)):
+    if subject_list[i] in going_class_dict:
+        less = going_class_dict[subject_list[i]]
+        self_studying_time_dict[subject_list[i]] -= less
+    less = 0
 
-
+print(self_studying_time_dict)
 
 
 
