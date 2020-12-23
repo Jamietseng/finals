@@ -5,16 +5,18 @@ fourth_day_list = input().split(',')
 fifth_day_list = input().split(',')
 sixth_day_list = input().split(',')
 seven_day_list = input().split(',')
-week_list = [first_day_list, second_day_list,third_day_list, fourth_day_list, fifth_day_list, sixth_day_list, seven_day_list]
+week_list = [first_day_list, second_day_list, third_day_list, fourth_day_list, fifth_day_list, sixth_day_list, seven_day_list]
 
 subject_list = ['經原','西文','微積分','體育','會計','民概']  # 另一個檔案的輸入，要改
 self_studying_time_dict = dict()
-self_studying_time_dict['經原'] = 16
-self_studying_time_dict['西文'] = 15
-self_studying_time_dict['微積分'] = 15
-self_studying_time_dict['體育'] = 11
+self_studying_time_dict['經原'] = 19
+self_studying_time_dict['西文'] = 11
+self_studying_time_dict['微積分'] = 17
+self_studying_time_dict['體育'] = 0
 self_studying_time_dict['會計'] = 13
-self_studying_time_dict['民概'] = 16
+self_studying_time_dict['民概'] = 13
+
+print(self_studying_time_dict)
 
 def fill_in_missing_class(day_list, subject_list, self_studying_time_dict):  # 補一堂課的情況
     for i in range(len(subject_list)):
@@ -45,26 +47,26 @@ def fill_in_missing_class(day_list, subject_list, self_studying_time_dict):  # �
                                 break
                         else:
                             break
-                    if before_place > 0 or after_place > 0:  # 選擇要補哪裡(補奇數！)
+                    if before_place > 0 or after_place > 0:  # 選擇要補哪裡
                         if before_place%2 == 0:
-                            if after_place%2 != 0:
+                            if after_place%2 != 0:  # 前偶後奇-補後面1堂
                                 day_list[place + 1] = subject_list[i]
                                 self_studying_time_dict[subject_list[i]] -= 1
-                            else:
-                                if before_place <= after_place:
-                                    day_list[place - 1] = subject_list[i]
-                                    day_list[place - 2] = subject_list[i]
-                                    self_studying_time_dict[subject_list[i]] -= 2
-                                else:
+                            else:  # 前偶後偶
+                                if before_place <= after_place:  # 前空堂<=後空堂-補後2堂
                                     day_list[place + 1] = subject_list[i]
                                     day_list[place + 2] = subject_list[i]
                                     self_studying_time_dict[subject_list[i]] -= 2
+                                else: # 前空堂>後空堂-補前2堂
+                                    day_list[place - 1] = subject_list[i]
+                                    day_list[place - 2] = subject_list[i]
+                                    self_studying_time_dict[subject_list[i]] -= 2
                         else:
-                            if after_place%2 != 0:
+                            if after_place%2 != 0:  # 前奇後奇 -前後各補1堂
                                 day_list[place + 1] = subject_list[i]
                                 day_list[place - 1] = subject_list[i]
                                 self_studying_time_dict[subject_list[i]] -= 2
-                            else:
+                            else:  # 前奇後偶-補前1堂
                                 day_list[place - 1] = subject_list[i]
                                 self_studying_time_dict[subject_list[i]] -= 1
     return day_list
@@ -73,49 +75,86 @@ for i in range(7):
     day_list = week_list[i]
     week_list[i] = fill_in_missing_class(day_list, subject_list, self_studying_time_dict)
 
-def finishing_table(day_list, self_studying_time_dict):
-    place = 0
-    temp_place_list = []
-    for i in range(len(day_list)):
+
+def finishing_table(day_list, self_studying_time_dict):  #找一個間格有多少空堂
+    place = day_list.index('0')  # 第一個'0'出現的位置
+    at_place = 0  # 總共有多少個0
+    temp_place_list = []  # 那一串0的位置順序
+    for i in range(place, len(day_list)):
         if day_list[i] == '0':
-            place += 1
+            at_place += 1
             temp_place_list.append(i)
         else:
             break
-    return (place, temp_place_list)
+    return (at_place, temp_place_list)
 
+print(self_studying_time_dict)
 
-day_list = week_list[0]
-while '0' in day_list:
-    if day_list.count('0') == 1:
-        break
-    change, place_list = finishing_table(day_list, self_studying_time_dict)
+for i in range(7):  # 填空
+    day_list = week_list[i]
+    while '0' in day_list:
+        if day_list.count('0') == 1:
+            break
+        
+        elif day_list.count('0') == 0:
+            break
+        
+        if day_list.count('0') == len(day_list):  #  如果是周末都沒課的話
+            while True:
+                number = day_list.count('0') // 2  # 要排多少組
+                location = day_list.index('0')  # 第一個0的位置
+        
+                if number < len(subject_list):  #如果組數<總小時數的話用另一個做
+                    break
+                
+                else:
+                    for j in range(len(subject_list)):  # 如果組數>=總小時數的話一組一組換，換完再循環直到剩1
+                        day_list[location + 2 * j] = subject_list[j]
+                        day_list[location + 2 * j + 1] = subject_list[j]
+                        self_studying_time_dict[subject_list[j]] -= 2
+            
+            number = day_list.count('0') // 2
+            location = day_list.index('0')
+            
+            for j in range(number):  # 如果組數<總小時數的做法
+                day_list[location + 2 * j] = subject_list[j]
+                day_list[location + 2 * j + 1] = subject_list[j]
+                self_studying_time_dict[subject_list[j]] -= 2
+            
+            if day_list.count('0') == 1:  # 剩一個0，所以補上前面那個讀書的時間
+                location = day_list.index('0')
+                day_list[location] = day_list[location - 1]
+                self_studying_time_dict[day_list[location]] -= 1
+        
+        else:  # 周間(要上課的時候)的作法
+            change, place_list = finishing_table(day_list, self_studying_time_dict)  #一個間隔一個間隔看
+            subject_list_copy = []
+            
+            for i in range(len(subject_list)):  # subject_list_copy 跟 subject_to_study_list是不是一樣的東西？
+                if subject_list[i] not in day_list:
+                    subject_list_copy.append(subject_list[i])
 
-    subject_list_copy = []
-    for i in range(len(subject_list)):
-        if subject_list[i] not in day_list:
-            subject_list_copy.append(subject_list[i])
+            subject_to_study_list = []
+            
+            for i in subject_list_copy:  # 如果當天有上課，就不讀那科
+                subject_to_study_list.append(i)
+            
+            number = change // 2
+            for i in range(number):  # 一組一組換掉
+                day_list[place_list[0]] = subject_to_study_list[-1]
+                day_list[place_list[1]] = subject_to_study_list[-1]
+                self_studying_time_dict[subject_to_study_list[-1]] -= 2
+                subject_to_study_list.pop()
+                place_list.pop(0)
+                place_list.pop(0)
 
-    subject_to_study_list = []
-    for i in subject_list_copy:
-        subject_to_study_list.append(i)
+            if place_list != []:  # 如果有剩一個落單，就補上跟前面一樣的科目
+                location = place_list[0]
+                day_list[location] = day_list[location - 1]
+                self_studying_time_dict[day_list[location]] -= 1
 
-    number = change // 2
-    for i in range(number):
-        print('i', i)
-        day_list[place_list[0]] = subject_to_study_list[-1]
-        day_list[place_list[1]] = subject_to_study_list[-1]
-        subject_to_study_list.pop()
-        place_list.pop(0)
-        place_list.pop(0)
-    change = 0
-    number = 0
-
-if '0' in day_list:
-    day_list[day_list.index('0')] = day_list[day_list.index('0') - 1]
-
-print(day_list)
-
+    print(day_list)
+    print(self_studying_time_dict)
 
 
 
