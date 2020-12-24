@@ -50,7 +50,7 @@ def fill_in_missing_class(day_list, subject_list, self_studying_time_dict):  # �
                     if before_place > 0 or after_place > 0:  # 選擇要補哪裡
                         if before_place%2 == 0:
                             if after_place%2 != 0:  # 前偶後奇-補後面1堂
-                                day_list[place + 1] = subject_list[i]
+                                day_list[place + 1] = subject_list[i]    
                                 self_studying_time_dict[subject_list[i]] -= 1
                             else:  # 前偶後偶
                                 if before_place <= after_place:  # 前空堂<=後空堂-補後2堂
@@ -88,7 +88,11 @@ def finishing_table(day_list, self_studying_time_dict):  #找一個間格有多�
             break
     return (at_place, temp_place_list)
 
-print(self_studying_time_dict)
+
+self_studying_time_list = []
+for i in range(len(subject_list)):  # 把dict轉成list
+    self_studying_time_list.append(self_studying_time_dict[subject_list[i]])
+
 
 for i in range(7):  # 填空
     day_list = week_list[i]
