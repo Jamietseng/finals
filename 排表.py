@@ -86,7 +86,7 @@ def finishing_table(day_list, self_studying_time_dict):  #找一個間格有多�
             break
     return (at_place, temp_place_list)
 
-
+print(self_studying_time_dict)
 # main
 self_studying_time_list = []
 for i in range(len(subject_list)):  # 把dict轉成list
@@ -101,15 +101,56 @@ for i in range(7):  # 7天填空
             break
         
         elif day_list.count('0') == len(day_list):  #  如果是周末都沒課的話，暫時先不處理
-            continue
+            subject_to_study_list = []
+            for i in range(len(subject_list)):  # 如果當天有上課，就不讀那一科
+                subject_to_study_list.append(subject_list[i])
+
+            while True:
+                if day_list.count('0') == 0:
+                    break
+                change, place_list = finishing_table(day_list, self_studying_time_dict)
+                #change % 2 == 0
+                number = change // 2
+                for i in range(number):  # 一組一組換掉
+                    if subject_to_study_list == []:
+                        for n in range(len(day_list)):
+                            if day_list[n] == '0':
+                                break
+                            subject_to_study_list.append(day_list[n])
+
+                    if self_studying_time_dict[subject_to_study_list[0]] - 2 < 0:
+                        subject_to_study_list.pop(0)
+                    
+                    elif self_studying_time_dict[subject_to_study_list[0]] - 2 >= 0:
+                        while True:
+                            if day_list[place_list[0] - 1] != subject_to_study_list[0]:
+                                break
+                            subject_to_study_list.pop(0)
+                        
+                        while True:
+                            if place_list[1] == len(day_list) - 1:
+                                break
+                            elif day_list[place_list[1] + 1] != subject_to_study_list[0]:
+                                break
+                            subject_to_study_list.pop(0)
+                        
+                        day_list[place_list[0]] = subject_to_study_list[0]
+                        day_list[place_list[1]] = subject_to_study_list[0]
+                        self_studying_time_dict[subject_to_study_list[0]] -= 2
+                        subject_to_study_list.pop(0)
+                        place_list.pop(0)
+                        place_list.pop(0)
+
+                        if subject_to_study_list == []:
+                            break
+                print('day_list(weekend):', day_list)
+                print(self_studying_time_dict)
         
         else:  # 周間(要上課的時候)的作法
             subject_to_study_list = []
             for i in range(len(subject_list)):  # 如果當天有上課，就不讀那一科
-                if subject_list[i] not in day_list:
-                    subject_to_study_list.append(subject_list[i])
+                subject_to_study_list.append(subject_list[i])
                     
-            
             if self_studying_time_dict[subject_to_study_list[-1]] - 2 < 0:
                 subject_to_study_list.pop()
             
@@ -118,81 +159,112 @@ for i in range(7):  # 7天填空
                 if change % 2 == 0:  # 堂數為偶數
                     number = change // 2  # 組數
                     for i in range(number):  # 一組一組換掉
-                        
+                        if subject_to_study_list == []:
+                            for n in range(len(day_list)):
+                                if day_list[n] == '0':
+                                    break
+                                elif day_list[n] not in subject_to_study_list:
+                                    subject_to_study_list.append(day_list[n])
+
                         if self_studying_time_dict[subject_to_study_list[-1]] - 2 < 0:
-                                subject_to_study_list.pop()
-                        
+                            subject_to_study_list.pop()
+
                         elif self_studying_time_dict[subject_to_study_list[-1]] - 2 >= 0:
-                            print('day_list:', day_list)
-                            print('place_list[0]、[1]:', place_list[0], place_list[1])
-                            print('subject_to_study_list[-1]:', subject_to_study_list[-1])
+                            while True:
+                                if day_list[place_list[0] - 1] != subject_to_study_list[-1]:
+                                    if self_studying_time_dict[subject_to_study_list[-1]] - 2 < 0:
+                                        subject_to_study_list.pop()
+                                    break
+                                subject_to_study_list.pop()
+                            
+                            while True:
+                                if place_list[1] == len(day_list) - 1:
+                                    break
+                                elif day_list[place_list[1] + 1] != subject_to_study_list[-1]:
+                                    if self_studying_time_dict[subject_to_study_list[-1]] - 2 < 0:
+                                        subject_to_study_list.pop()
+                                    break
+                                subject_to_study_list.pop()
+
                             day_list[place_list[0]] = subject_to_study_list[-1]
                             day_list[place_list[1]] = subject_to_study_list[-1]
                             self_studying_time_dict[subject_to_study_list[-1]] -= 2
                             subject_to_study_list.pop()
                             place_list.pop(0)
                             place_list.pop(0)
-                            print('after')
-                            print('day_list:', day_list)
-                            print('place_list:', place_list)
-                            print('subject_to_study_list:', subject_to_study_list)
-                            print()
+
                             if subject_to_study_list == []:
                                 break
-                
                             
                             
                 else:  # 堂數為基數
-                    print('in else')
-                    print('subject_to_study_list:', subject_to_study_list)
                     number = change // 2 - 1  # 組數
                     for i in range(number):  # 一組一組換掉
-
                         while True:
                             if subject_to_study_list == []:
                                 break
+                            
+                            elif len(place_list) == 3:
+                                break
+                            
                             elif self_studying_time_dict[subject_to_study_list[-1]] - 2 < 0:
                                     subject_to_study_list.pop()
-                                    print('if')
-                                    print('subject_to_study_list[-1]:', subject_to_study_list[-1])
-                                    print('self_studying_time_dict[subject_to_study_list[-1]]:', self_studying_time_dict[subject_to_study_list[-1]])
                             
                             elif self_studying_time_dict[subject_to_study_list[-1]] - 2 >= 0:
+                                while True:
+                                    if day_list[place_list[0] - 1] != subject_to_study_list[-1]:
+                                        break
+                                    subject_to_study_list.pop()
+                                
+                                while True:
+                                    if place_list[1] == len(day_list) - 1:
+                                        break
+                                    elif day_list[place_list[1] + 1] != subject_to_study_list[-1]:
+                                        break
+                                    subject_to_study_list.pop()
+
                                 day_list[place_list[0]] = subject_to_study_list[-1]
                                 day_list[place_list[1]] = subject_to_study_list[-1]
                                 self_studying_time_dict[subject_to_study_list[-1]] -= 2
                                 subject_to_study_list.pop()
                                 place_list.pop(0)
                                 place_list.pop(0)
-                                 
-                                print('elif day_list:',day_list)
-                    print('***day_list:', day_list)
-                    print('self_studying_time_dict:', self_studying_time_dict)
+
                     if subject_to_study_list == []:
                         for n in range(len(day_list)):
-                            print(n)
-                            print(day_list[n])
                             if day_list[n] == '0':
                                 break
-                            if self_studying_time_dict[day_list[n]] % 2 == 1:
-                                subject_to_study_list.append(day_list[n])
-                            print('subject_to_study_list:', subject_to_study_list)
-                            
+                            if day_list[n] not in subject_to_study_list:
+                                subject_to_study_list.append(day_list[n]) 
 
                     for k in range(len(subject_to_study_list)):
                         if self_studying_time_dict[subject_to_study_list[k]] > 1 and self_studying_time_dict[subject_to_study_list[k]] % 2 != 0:
                             day_list[place_list[0]] = subject_to_study_list[k]
                             day_list[place_list[1]] = subject_to_study_list[k]
                             day_list[place_list[2]] = subject_to_study_list[k]
-                            self_studying_time_dict[subject_to_study_list[k]] -= 2
+                            self_studying_time_dict[subject_to_study_list[k]] -= 3
                             subject_to_study_list.pop(k)
                             place_list.pop(0)
                             place_list.pop(0)
                             place_list.pop(0)
                             break
-                    print(day_list)
-            if day_list.count('0') == 0:
-                break
+                        
+                        elif self_studying_time_dict[subject_to_study_list[k]] > 1:
+                            day_list[place_list[0]] = subject_to_study_list[k]
+                            day_list[place_list[1]] = subject_to_study_list[k]
+                            day_list[place_list[2]] = subject_to_study_list[k]
+                            self_studying_time_dict[subject_to_study_list[k]] -= 3
+                            subject_to_study_list.pop(k)
+                            place_list.pop(0)
+                            place_list.pop(0)
+                            place_list.pop(0)
+                            break
+
+                if day_list.count('0') == 0:
+                    break
+            print('day_list:', day_list)
+            #print(self_studying_time_dict)
+
 
 '''
 elif day_list.count('0') == len(day_list):  #  如果是周末都沒課的話
@@ -222,8 +294,7 @@ elif day_list.count('0') == len(day_list):  #  如果是周末都沒課的話
         day_list[location] = day_list[location - 1]
         self_studying_time_dict[day_list[location]] -= 1
 '''    
-print(day_list)
-print(self_studying_time_dict)
+
 
 
 
