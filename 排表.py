@@ -10,9 +10,9 @@ week_list = [first_day_list, second_day_list, third_day_list, fourth_day_list, f
 final_week_list = []
 subject_list = ['經原','西文','微積分','體育','會計','民概']  # 另一個檔案的輸入，要改
 self_studying_time_dict = dict()
-self_studying_time_dict['經原'] = 19
-self_studying_time_dict['西文'] = 11
-self_studying_time_dict['微積分'] = 17
+self_studying_time_dict['經原'] = 18
+self_studying_time_dict['西文'] = 10
+self_studying_time_dict['微積分'] = 16
 self_studying_time_dict['體育'] = 0
 self_studying_time_dict['會計'] = 13
 self_studying_time_dict['民概'] = 13
@@ -30,7 +30,7 @@ def fill_in_missing_class(day_list, subject_list, self_studying_time_dict):  # �
                     temp_place = place - 1
                     before_place = 0
                     while True:  # 找那堂課前面空多少時間
-                        if day_list[temp_place] == '0':
+                        if day_list[temp_place] == '3':
                             before_place += 1
                             temp_place -= 1
                             if temp_place == -1:
@@ -40,7 +40,7 @@ def fill_in_missing_class(day_list, subject_list, self_studying_time_dict):  # �
                     temp_place = place + 1
                     after_place = 0
                     while True:  # 找那堂課後面空多少時間
-                        if day_list[temp_place] == '0':
+                        if day_list[temp_place] == '3':
                             after_place += 1
                             temp_place += 1
                             if temp_place > len(day_list) - 1:
@@ -77,11 +77,11 @@ for i in range(7):
 
 
 def finishing_table(day_list, self_studying_time_dict):  #找一個間格有多少空堂
-    place = day_list.index('0')  # 第一個'0'出現的位置
+    place = day_list.index('3')  # 第一個'3'出現的位置
     at_place = 0  # 總共有多少個0
     temp_place_list = []  # 那一串0的位置順序
     for i in range(place, len(day_list)):
-        if day_list[i] == '0':
+        if day_list[i] == '3':
             at_place += 1
             temp_place_list.append(i)
         else:
@@ -106,17 +106,17 @@ for i in range(7):  # 7天填空
     day_list = week_list[i]
     subject_list = subject_list_sort(subject_list, self_studying_time_dict)
 
-    while '0' in day_list:
-        if day_list.count('0') == 0:
+    while '3' in day_list:
+        if day_list.count('3') == 0:
             break
         
-        elif day_list.count('0') == len(day_list):  #  如果是周末都沒課的話，暫時先不處理
+        elif day_list.count('3') == len(day_list):  #  如果是周末都沒課的話，暫時先不處理
             subject_to_study_list = []
             for i in range(len(subject_list)):  # 如果當天有上課，就不讀那一科
                 subject_to_study_list.append(subject_list[i])
 
             while True:
-                if day_list.count('0') == 0:
+                if day_list.count('3') == 0:
                     break
                 change, place_list = finishing_table(day_list, self_studying_time_dict)
                 #change % 2 == 0
@@ -124,7 +124,7 @@ for i in range(7):  # 7天填空
                 for i in range(number):  # 一組一組換掉
                     if subject_to_study_list == []:
                         for n in range(len(day_list)):
-                            if day_list[n] == '0':
+                            if day_list[n] == '3':
                                 break
                             subject_to_study_list.append(day_list[n])
 
@@ -280,7 +280,7 @@ for i in range(7):  # 7天填空
                     if place_list != []:
                         if subject_to_study_list == []:
                             for n in range(len(day_list)):
-                                if day_list[n] == '0':
+                                if day_list[n] == '3':
                                     continue
                                 if day_list[n] not in subject_to_study_list and self_studying_time_dict[day_list[n]] % 2 == 0:
                                     subject_to_study_list.append(day_list[n])
@@ -316,13 +316,13 @@ for i in range(7):  # 7天填空
                                 place_list.pop(0)
                                 break
 
-                if day_list.count('0') == 0:
+                if day_list.count('3') == 0:
                     break
 
     final_week_list.append(day_list)
     print(day_list)
 print(final_week_list)
-
+print(self_studying_time_dict)
 
 
 
